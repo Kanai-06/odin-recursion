@@ -63,4 +63,36 @@ def mergesort(arr)
   end
 end
 
-p mergesort([105, 79, 100, 110])
+class Integer
+  def num_digits
+    return 1 if self == 0
+
+    Math.log10(abs).to_i + 1
+  end
+end
+
+def karatsuba(x, y)
+  x_digits = x.num_digits
+  y_digits = y.num_digits
+  min_digits = [x_digits, y_digits].min / 2
+  min_digits = 1 if min_digits == 0
+
+  if x_digits == 1 && y_digits == 1
+    x * y
+  else
+    x1 = x / (10**min_digits)
+    y1 = y / (10**min_digits)
+
+    x0 = x % (10**min_digits)
+    y0 = y % (10**min_digits)
+
+    z2 = karatsuba(x1, y1)
+    z0 = karatsuba(x0, y0)
+    z3 = karatsuba(x1 + x0, y1 + y0)
+    z1 = z3 - z2 - z0
+
+    (z2 * (10**(2 * min_digits))) + (z1 * (10**min_digits)) + z0
+  end
+end
+
+puts karatsuba(522, 64)
